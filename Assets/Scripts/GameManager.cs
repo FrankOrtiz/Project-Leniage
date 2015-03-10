@@ -10,8 +10,7 @@ public class GameManager : MonoBehaviour {
 	public int armor = 0;			// armor carried from previous generation
 	public int weapon = 0;			// weapon carried from previous generation
 	public int exp = 0;				// experience carried from previous generation
-	private int currentGeneration = 0; 
-	public int previousGeneration = 0;  
+	public int generation = 1;  
 	public int totalExp = 0;
 	public int enemiesKilled = 0;
 	public int furthestStage = 0;
@@ -34,9 +33,8 @@ public class GameManager : MonoBehaviour {
 		InitGame();						// Call the InitGame function to initialize the first level 
 	}
 	
-	void InitGame(){		//Initializes the game for each level.
-
-		generationScript.SetupScene (currentGeneration);	// Call the SetupScene function of the GenerationScript
+	void InitGame(){		// Initializes the game for each generation.
+		generationScript.SetupGeneration (generation);		// Call the SetupScene function of the GenerationScript
 															// pass it current generation number.
 	}
 
