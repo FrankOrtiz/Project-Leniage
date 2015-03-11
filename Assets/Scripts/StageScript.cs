@@ -20,7 +20,7 @@ public class StageScript : MonoBehaviour {
 	public int enemiesKilledThisStage = 0;
 	public int totalEnemies;
 	public float stageStartDelay = 2f;
-	
+	public int thisStage;
 	private Text stageText;
 	private GameObject stageImage;
 
@@ -46,7 +46,7 @@ public class StageScript : MonoBehaviour {
 		generationScript = GetComponent<GenerationScript> ();
 		enemyLevel = generationScript.currentStage;
 		stageHolder = new GameObject ("Stage").transform;
-
+		thisStage = currentStage;
 
 		Debug.Log ("Stage created");
 		Debug.Log ("Stage: " + currentStage);
@@ -65,9 +65,10 @@ public class StageScript : MonoBehaviour {
 		background.transform.SetParent (stageHolder);
 	}
 
-	void SelectEnemy(int currentStage){
+	public void SelectEnemy(int currentStage){
 		if (enemiesKilledThisStage < totalEnemies) {
-			GameObject currentEnemy = Instantiate (possiableEnemies [enemiesKilledThisStage]);
+//			GameObject currentEnemy = Instantiate (possiableEnemies [enemiesKilledThisStage]);
+			GameObject currentEnemy = Instantiate (possiableEnemies [Random.Range(0, possiableEnemies.Length)]);
 		} else if (enemiesKilledThisStage == totalEnemies) {
 			GameObject currentBoss = Instantiate (bossesArray [currentStage]);
 		} else {
