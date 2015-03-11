@@ -25,7 +25,8 @@ public class GenerationScript : MonoBehaviour {
 	private GameManager gameManager;
 
 
-
+	private Transform generationHolder; 
+	
 	public int playerHealth = 0;
 	public int playerAge = 18;
 	public int currentExp = 0;
@@ -47,10 +48,13 @@ public class GenerationScript : MonoBehaviour {
 
 	public void SetupGeneration (int generation){
 		//Creates the outer walls and floor.
+		generationHolder = new GameObject ("Generation " + generation).transform;
 		stageScript = GetComponent<StageScript>();
 	
 		stageScript.InitStage (currentStage);
-		Instantiate(possiableCharacters[Random.Range (0, possiableCharacters.Length)]);
+		GameObject player = Instantiate(possiableCharacters[Random.Range (0, possiableCharacters.Length)]);
+		player.transform.SetParent(generationHolder);
+		
 		//Reset our list of gridpositions.
 //		InitialiseList ();
 		

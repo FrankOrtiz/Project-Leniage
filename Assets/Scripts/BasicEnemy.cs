@@ -3,8 +3,6 @@ using System.Collections;
 
 public class BasicEnemy : EnemyScript {
 
-	private StageScript stageScript;
-	public bool isDead = false;
 	// Use this for initialization
 	protected override void Start () {
 		Debug.Log ("Enemy created");

@@ -13,16 +13,23 @@ public class StageScript : MonoBehaviour {
 	public bool weaponUpgrade;
 	public bool armorUpgrade;
 	public bool enemyCount;
+
 	public GameObject[] backgroundsArray;
 	public GameObject[] possiableEnemies;  
 	public GameObject[] bossesArray;
+
 	private bool playerTurn = true;
 	public int enemiesKilledThisStage = 0;
 	public int totalEnemies;
 	public float stageStartDelay = 2f;
 	public int thisStage;
+
 	private Text stageText;
 	private GameObject stageImage;
+	private GameObject attackPanel;
+	GameObject playerCharacter;
+	GameObject currentEnemy;
+	BasicEnemy enemyScript;
 
 	private bool settingUp;
 	
@@ -41,11 +48,30 @@ public class StageScript : MonoBehaviour {
 		totalEnemies = (enemies * 5);
 	}
 
+	public void BasicAttack(){
+		GameObject generation = GameObject.Find ("Generation");
+		Transform[] generationChildren = GetComponentsInChildren<Transform>(generation);
+		foreach (Transform player in generationChildren) {
+			playerCharacter = player.gameObject;
+		}
+
+		GameObject stage = GameObject.Find ("StageHolder");
+		Transform[] stageChildren = GetComponentsInChildren<Transform>(stage);
+		foreach (Transform enemy in stageChildren) {
+			currentEnemy = enemy.gameObject;
+		}
+
+		BasicEnemy enemyScript = currentEnemy.GetComponent<BasicEnemy> ();
+		Debug.Log ("Player Attacks");
+		Debug.Log (enemyScript.level);
+		Debug.Log ("Player " + playerCharacter.name + "Attacks: " + "lvl" + enemyScript.level + " " + currentEnemy.name);
+	}
+
 	public void StageSetup (int currentStage){
 		gameManager = GetComponent<GameManager>();
 		generationScript = GetComponent<GenerationScript> ();
 		enemyLevel = generationScript.currentStage;
-		stageHolder = new GameObject ("Stage").transform;
+		stageHolder = new GameObject ("Stage " + enemyLevel).transform;
 		thisStage = currentStage;
 
 		Debug.Log ("Stage created");
@@ -69,8 +95,10 @@ public class StageScript : MonoBehaviour {
 		if (enemiesKilledThisStage < totalEnemies) {
 //			GameObject currentEnemy = Instantiate (possiableEnemies [enemiesKilledThisStage]);
 			GameObject currentEnemy = Instantiate (possiableEnemies [Random.Range(0, possiableEnemies.Length)]);
+			currentEnemy.transform.SetParent(stageHolder);
 		} else if (enemiesKilledThisStage == totalEnemies) {
-			GameObject currentBoss = Instantiate (bossesArray [currentStage]);
+			GameObject currentBoss = Instantiate (bossesArray [currentStage -1]);
+			currentBoss.transform.SetParent(stageHolder);
 		} else {
 			currentStage++;
 			InitStage (currentStage);
@@ -96,6 +124,7 @@ public class StageScript : MonoBehaviour {
 		settingUp = true;
 		stageImage = GameObject.Find ("StageImage");
 		stageText = GameObject.Find ("StageText").GetComponent<Text>();
+		attackPanel = GameObject.Find ("AttackPanel");
 		stageText.text = "Stage " + currentStage;
 		stageImage.SetActive (true);
 		Invoke ("HideStageImage", stageStartDelay);
@@ -106,6 +135,7 @@ public class StageScript : MonoBehaviour {
 	private void HideStageImage(){
 		stageImage.SetActive (false);
 		settingUp = false;
+		attackPanel.transform.Rotate (0,90,0);
 	}
 	// Update is called once per frame
 	void Update () {
